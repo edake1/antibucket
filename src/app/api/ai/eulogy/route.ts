@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
-import ZAI from 'z-ai-web-dev-sdk'
+import OpenAI from 'openai'
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+})
 
 // POST /api/ai/eulogy - Generate AI eulogy
 export async function POST(request: NextRequest) {
@@ -10,8 +14,6 @@ export async function POST(request: NextRequest) {
     if (!title) {
       return NextResponse.json({ error: 'Title is required' }, { status: 400 })
     }
-
-    const zai = await ZAI.create()
 
     const stylePrompts: Record<string, string> = {
       dramatic: 'Write an over-the-top, dramatic eulogy with theatrical flair. Use grand language and epic metaphors.',
@@ -37,7 +39,8 @@ Guidelines:
 
 Write only the eulogy, nothing else.`
 
-    const completion = await zai.chat.completions.create({
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-4o-mini',
       messages: [
         {
           role: 'system',
@@ -46,6 +49,7 @@ Write only the eulogy, nothing else.`
         { role: 'user', content: prompt }
       ],
       temperature: 0.9,
+      max_tokens: 200,
     })
 
     const eulogy = completion.choices[0]?.message?.content || ''

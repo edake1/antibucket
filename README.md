@@ -1,82 +1,35 @@
-# Anti-Bucket
+# AntiBucket
 
 > **"The app where you celebrate what you're *done* with."**
 
----
-
-## 🎯 The Vision
-
-Bucket lists are about what you *want* to do. But what about what you're *done* doing?
-
-We've all had experiences, habits, relationships, foods, jobs, and trends that we've tried — and decided: **never again**.
-
-**Anti-Bucket** is where you add things you're officially done with. It's closure. It's humor. It's solidarity. It's wisdom.
+Bucket lists are about what you *want* to do. AntiBucket is for what you're *done* doing. Add things you've quit, AI writes a eulogy, and the world piles on with "Me Too" solidarity. Closure, humor, and wisdom — all in one place.
 
 ---
 
-## 💡 Core Features
+## Core Features
 
-### 1. Add Anti-Bucket Items
-- What are you done with?
-- Pick a category (Food, Relationships, Jobs, Habits, Trends, etc.)
-- Write your story/why (optional)
-- AI generates a "eulogy" — funny, dramatic, or heartfelt
+### Add Anti-Bucket Items
+Describe what you're done with, pick a category, tell your story. AI generates a personalized eulogy — funny, dramatic, or heartfelt.
 
-### 2. AI Eulogy Generator
-The magic moment. When you add an item, AI writes a eulogy:
+### AI Eulogy Generator
+The magic moment. Powered by **OpenAI GPT-4o-mini**.
 
 > *"Here lies Kale Smoothies. You tried your best to be palatable. You really did. But no amount of honey could mask your true nature: liquid lawn clippings with delusions of grandeur. Three honest attempts were made. You will not be missed."*
 
-Eulogy styles:
-- 🎭 **Dramatic** — Over-the-top theatrical flair
-- 😏 **Sarcastic** — Dry wit and cutting humor
-- 💝 **Heartfelt** — Genuinely touching and warm
-- 🎸 **Rock Star** — Legendary musician vibes
+**Eulogy styles:** Dramatic | Sarcastic | Heartfelt | Rock Star
 
-### 3. "Me Too" Solidarity
-- See how many others have also added the same thing
-- "847 people are also done with kale smoothies"
-- Creates a sense of community and validation
+### "Me Too" Solidarity
+See how many others are also done with the same thing. *"847 people are also done with kale smoothies."*
 
-### 4. Browse by Category
-- 🍔 Food & Drink
-- 💔 Relationships
-- 💼 Work & Career
-- 🏃 Habits
-- 🎭 Trends & Fads
-- 🎬 Entertainment
-- ✈️ Travel
-- 🛒 Products
-- 💭 Ideas & Beliefs
-- 🤷 Other
+### Browse & Discover
+10 categories: Food, Relationships, Work, Habits, Trends, Entertainment, Travel, Products, Ideas, Other. Search, filter, and explore what humanity is collectively over.
 
-### 5. Share Your Anti-Buckets
-- Beautiful eulogy cards
-- Copy to clipboard
-- Native share on mobile
+### Share
+Beautiful eulogy cards. Copy to clipboard. Native share on mobile.
 
 ---
 
-## 🗂️ Data Model
-
-### AntiBucketItem
-```typescript
-{
-  id: string
-  title: string          // "Kale smoothies"
-  category: string       // "food", "relationships", etc.
-  story: string?         // User's "why" (optional)
-  eulogy: string         // AI-generated eulogy
-  eulogyStyle: string    // "dramatic", "sarcastic", "heartfelt", "rockstar"
-  meTooCount: number     // How many others agree
-  isAnonymous: boolean   // Always true for MVP
-  createdAt: datetime
-}
-```
-
----
-
-## 🚀 Getting Started
+## Getting Started
 
 ```bash
 # Install dependencies
@@ -86,84 +39,85 @@ bun install
 bunx prisma db push
 bunx prisma db seed
 
+# Add your OpenAI API key to .env
+# OPENAI_API_KEY="sk-..."
+
 # Start development server
 bun run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to see the application.
+Open [http://localhost:3000](http://localhost:3000).
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
-- **Frontend:** Next.js 15, React, TypeScript
-- **Styling:** Tailwind CSS with custom warm theme
-- **UI Components:** shadcn/ui
-- **Database:** Prisma + SQLite
-- **AI:** z-ai-web-dev-sdk for eulogy generation
-
----
-
-## 📱 Mobile-First Design
-
-Every feature designed for mobile first:
-- Touch-friendly interactions
-- Large tap targets
-- Smooth scrolling
-- Native share integration
-- Responsive layouts
+| Layer | Technology |
+|-------|-----------|
+| Framework | Next.js, React 19, TypeScript |
+| Styling | Tailwind CSS, shadcn/ui |
+| Database | Prisma + SQLite |
+| AI | OpenAI GPT-4o-mini |
+| Design | Mobile-first, warm rose/orange gradients |
 
 ---
 
-## 🎨 Design Philosophy
-
-### Vibe: Satisfying Closure
-
-- **Colors:** Warm rose/orange/pink gradients (not harsh or negative)
-- **Typography:** Clean, modern, slightly playful
-- **Tone:** Humorous but not mean-spirited
-- **Feeling:** Like crossing something off a list — satisfying!
-
----
-
-## 📂 Project Structure
+## Project Structure
 
 ```
 src/
 ├── app/
-│   ├── page.tsx           # Home page with trending items
-│   ├── add/page.tsx       # Add new Anti-Bucket item
-│   ├── item/[id]/page.tsx # Item detail page
+│   ├── page.tsx              # Home — trending items, search, categories
+│   ├── add/page.tsx          # Add new item + AI eulogy generation
+│   ├── item/[id]/page.tsx    # Item detail + Me Too + share
 │   └── api/
-│       ├── items/         # CRUD for items
-│       └── ai/eulogy/     # AI eulogy generation
+│       ├── items/            # CRUD for items
+│       └── ai/eulogy/        # AI eulogy generation
 ├── components/
-│   ├── Header.tsx         # Site header
-│   └── AntiBucketCard.tsx # Item card component
+│   ├── Header.tsx
+│   └── AntiBucketCard.tsx
 └── lib/
-    └── prisma.ts          # Database client
+    └── prisma.ts
 ```
 
 ---
 
-## 🔮 Future Features
+## Data Model
 
-- User accounts & profiles
-- Comments and discussions
-- "Related Anti-Buckets" suggestions
-- Export as beautiful shareable images
-- Year in Review — your Anti-Bucket journey
-- Collaborative Anti-Buckets (couples, teams)
+```prisma
+model AntiBucketItem {
+  id          String   @id @default(cuid())
+  title       String
+  category    String
+  story       String?
+  eulogy      String
+  eulogyStyle String
+  meTooCount  Int      @default(0)
+  isAnonymous Boolean  @default(true)
+  createdAt   DateTime @default(now())
+}
+```
 
 ---
 
-## 💭 Why This Works
+## Roadmap
 
-1. **Universal Appeal** — Everyone has "never again" stories
+- [ ] User accounts & profiles
+- [ ] Comments and reactions
+- [ ] Share-as-image eulogy cards
+- [ ] "Related Anti-Buckets" recommendations
+- [ ] Year in Review export
+- [ ] Gamification (Wisdom Score, badges)
+
+---
+
+## Why This Works
+
+1. **Universal** — Everyone has "never again" stories
 2. **Low Friction** — Quick to add, immediately rewarding
-3. **Shareable** — Eulogies are made for social
-4. **Viral Potential** — "What are you done with?" is a great conversation starter
-5. **Positive Spin** — It's not complaining, it's wisdom
+3. **Shareable** — Eulogies are made for social media
+4. **Viral** — "What are you done with?" starts conversations
+5. **Positive** — It's not complaining, it's wisdom
 
 ---
 
