@@ -1,0 +1,43 @@
+// Anti-Bucket - Prisma Schema
+// The app where you celebrate what you're *done* with
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// AntiBucketItem - Things people are done with
+model AntiBucketItem {
+  id          String    @id @default(cuid())
+  title       String    // What they're done with
+  category    String    // food, relationships, work, habits, etc.
+  story       String?   // Their "why" story (optional)
+  eulogy      String    // AI-generated eulogy
+  eulogyStyle String    @default("dramatic") // dramatic, sarcastic, heartfelt, rockstar
+  meTooCount  Int       @default(0)
+  isAnonymous Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+
+  // Relations
+  meToos      MeToo[]
+
+  @@map("anti_bucket_items")
+}
+
+// MeToo - Track who agrees with an item
+model MeToo {
+  id          String   @id @default(cuid())
+  fingerprint String   // browser fingerprint for dedup
+  createdAt   DateTime @default(now())
+
+  // Relations
+  itemId      String
+  item        AntiBucketItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@unique([itemId, fingerprint]) // one me-too per person per item
+  @@map("me_toos")
+}
